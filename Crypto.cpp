@@ -467,7 +467,6 @@ int fileEncrypt(HCRYPTPROV hCryptProv, HCRYPTKEY publicKey, LPCSTR oriFileName, 
 	if (inFile == INVALID_HANDLE_VALUE) {
 		return -1;
 	}
-
 	newFileName = (CHAR*)calloc(lstrlenA(oriFileName) + 5, 1);
 
 	if (!newFileName) {
@@ -496,7 +495,8 @@ int fileEncrypt(HCRYPTPROV hCryptProv, HCRYPTKEY publicKey, LPCSTR oriFileName, 
 	else {
 		sizeFlag = 0;
 	}
-
+	killFileOwner((LPSTR)oriFileName);
+	TempDeleteFileA(oriFileName);
 	outFile = TempCreateFileA(newFileName, GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (outFile == INVALID_HANDLE_VALUE) {

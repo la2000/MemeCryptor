@@ -36,6 +36,9 @@
     <ClCompile Include="PE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MalwareManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Persistent.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MalwareManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
